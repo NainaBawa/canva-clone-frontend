@@ -1,0 +1,49 @@
+.control-panel {
+ position: absolute;
+ bottom: -40px; /* Keep the control panel just below the draggable element */
+ left: 0;
+ background-color: rgba(50, 50, 50, 0.8);
+ padding: 5px 10px;
+ border-radius: 8px;
+ display: none; /* Hidden by default */
+ z-index: 1000; /* Ensure the panel stays on top */
+}
+
+.draggable-element:hover .control-panel {
+ display: flex; /* Show the panel on hover */
+}
+
+.control-panel button {
+ background: transparent;
+ border: none;
+ color: white;
+ cursor: pointer;
+ margin: 0 5px;
+ font-size: 18px;
+ transition: color 0.3s ease;
+}
+
+.control-panel button:hover {
+ color: #f0a500;
+}
+
+.control-panel button:focus {
+ outline: none;
+}
+
+.control-panel button[title] {
+ position: relative;
+}
+
+.control-panel button[title]:hover::after {
+ content: attr(title);
+ position: absolute;
+ top: -25px;
+ left: 50%;
+ transform: translateX(-50%);
+ background-color: black;
+ color: white;
+ padding: 3px 6px;
+ border-radius: 3px;
+ font-size: 12px;
+}

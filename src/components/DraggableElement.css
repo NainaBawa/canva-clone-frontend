@@ -1,0 +1,31 @@
+.draggable-element {
+ position: relative;
+}
+
+.control-panel {
+ position: absolute;
+ bottom: -30px; /* Position the control panel below the draggable element */
+ left: 0;
+ background-color: rgba(0, 0, 0, 0.6);
+ color: white;
+ padding: 5px;
+ border-radius: 5px;
+ display: none; /* Hidden by default */
+}
+
+.draggable-element:hover .control-panel {
+ display: block; /* Show when the element is hovered */
+}
+
+button {
+ margin-right: 5px;
+ background-color: #444;
+ color: white;
+ border: none;
+ padding: 5px;
+ cursor: pointer;
+}
+
+button:hover {
+ background-color: #666;
+}
