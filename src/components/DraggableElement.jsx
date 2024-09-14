@@ -6,7 +6,7 @@ const DraggableElement = ({
   type,
   style,
   rotation,
-  content,
+  content,  // Now content can be either text or image URL
   isSelected,
   onSelect,
   onTextChange,
@@ -14,18 +14,17 @@ const DraggableElement = ({
   const { setNodeRef, transform } = useDraggable({ id });
   const [isEditing, setIsEditing] = useState(false);
   const inputRef = useRef(null);
-  console.log(isSelected);
 
   const draggableStyle = {
     ...style,
-    transform: `translate3d(${transform?.x || 0}px, ${
-      transform?.y || 0
-    }px, 0) rotate(${rotation}deg)`,
+    transform: `translate3d(${transform?.x || 0}px, ${transform?.y || 0}px, 0) rotate(${rotation}deg)`,
   };
 
   const handleClick = () => {
     onSelect();
-    setIsEditing(true);
+    if (type === "text") {
+      setIsEditing(true);
+    }
   };
 
   const handleBlur = () => {
@@ -75,7 +74,7 @@ const DraggableElement = ({
         )
       ) : (
         <img
-          src="https://via.placeholder.com/100"
+          src={content}  // Display the uploaded image
           alt={`Draggable Image ${id}`}
           style={{ width: "100px", height: "100px" }}
         />

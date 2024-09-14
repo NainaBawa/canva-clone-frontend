@@ -12,7 +12,7 @@ const App = () => {
   const [selectedElementId, setSelectedElementId] = useState(null);
   const canvasRef = React.useRef(null);
 
-  const addElement = (type) => {
+  const addElement = (type, content = "") => {
     const newElement = {
       id: `element-${elements.length}`,
       type,
@@ -22,7 +22,7 @@ const App = () => {
         left: Math.random() * 300,
       },
       rotation: 0,
-      content: type === "text" ? "Editable text" : "", // Default content for text
+      content: type === "text" ? "Editable text" : content, // Use content for images
     };
     setElements([...elements, newElement]);
   };
@@ -40,14 +40,8 @@ const App = () => {
           const newTop = el.style.top + delta.y;
           const newLeft = el.style.left + delta.x;
 
-          const adjustedTop = Math.max(
-            0,
-            Math.min(canvasRect.height - 100, newTop)
-          );
-          const adjustedLeft = Math.max(
-            0,
-            Math.min(canvasRect.width - 100, newLeft)
-          );
+          const adjustedTop = Math.max(0, Math.min(canvasRect.height - 100, newTop));
+          const adjustedLeft = Math.max(0, Math.min(canvasRect.width - 100, newLeft));
 
           return {
             ...el,
@@ -65,17 +59,13 @@ const App = () => {
 
   const updateElementRotation = (id, newRotation) => {
     setElements((prevElements) =>
-      prevElements.map((el) =>
-        el.id === id ? { ...el, rotation: newRotation } : el
-      )
+      prevElements.map((el) => (el.id === id ? { ...el, rotation: newRotation } : el))
     );
   };
 
   const handleTextChange = (id, newText) => {
     setElements((prevElements) =>
-      prevElements.map((el) =>
-        el.id === id ? { ...el, content: newText } : el
-      )
+      prevElements.map((el) => (el.id === id ? { ...el, content: newText } : el))
     );
   };
 
@@ -85,11 +75,7 @@ const App = () => {
         <ControlPanel addElement={addElement} />
         <Canvas ref={canvasRef}>
           {elements.map((el) => (
-            <div
-              className="elementsWrapper"
-              key={el.id}
-              onClick={() => console.log("clicked")}
-            >
+            <div className="elementsWrapper" key={el.id}>
               <DraggableElement
                 id={el.id}
                 type={el.type}
@@ -115,3 +101,4 @@ const App = () => {
 };
 
 export default App;
+
