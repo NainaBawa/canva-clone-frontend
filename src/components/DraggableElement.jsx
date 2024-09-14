@@ -13,10 +13,15 @@ const DraggableElement = ({
 }) => {
   const { setNodeRef, transform } = useDraggable({ id });
   const [isEditing, setIsEditing] = useState(false);
+  const [size, setSize] = useState({ width: 100, height: 100 }); // Add size state
+  const [isResizing, setIsResizing] = useState(false); // For resizing
   const inputRef = useRef(null);
+  const draggableRef = useRef(null); // Ref for the draggable element
 
   const draggableStyle = {
     ...style,
+    width: `${size.width}px`,
+    height: `${size.height}px`,
     transform: `translate3d(${transform?.x || 0}px, ${transform?.y || 0}px, 0) rotate(${rotation}deg)`,
   };
 
@@ -33,6 +38,23 @@ const DraggableElement = ({
 
   const handleChange = (e) => {
     onTextChange(e.target.value);
+  };
+
+  // Handle resize start
+  const handleResizeMouseDown = (e) => {
+    e.stopPropagation(); // Prevent drag event when resizing
+    setIsResizing(true);
+  };
+
+  const handleResizeMouseMove = (e) => {
+    if (!isResizing) return;
+    const newWidth = Math.max(50, e.clientX - draggableRef.current.getBoundingClientRect().left);
+    const newHeight = Math.max(50, e.clientY - draggableRef.current.getBoundingClientRect().top);
+    setSize({ width: newWidth, height: newHeight });
+  };
+
+  const handleResizeMouseUp = () => {
+    setIsResizing(false);
   };
 
   useEffect(() => {
@@ -52,8 +74,23 @@ const DraggableElement = ({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  // Attach event listeners for resizing
+  useEffect(() => {
+    if (isResizing) {
+      window.addEventListener("mousemove", handleResizeMouseMove);
+      window.addEventListener("mouseup", handleResizeMouseUp);
+    } else {
+      window.removeEventListener("mousemove", handleResizeMouseMove);
+      window.removeEventListener("mouseup", handleResizeMouseUp);
+    }
+    return () => {
+      window.removeEventListener("mousemove", handleResizeMouseMove);
+      window.removeEventListener("mouseup", handleResizeMouseUp);
+    };
+  }, [isResizing]);
+
   return (
-    <div ref={setNodeRef} style={draggableStyle} onClick={handleClick}>
+    <div ref={(node) => { setNodeRef(node); draggableRef.current = node; }} style={draggableStyle} onClick={handleClick}>
       {type === "text" ? (
         isEditing ? (
           <input
@@ -73,17 +110,47 @@ const DraggableElement = ({
           <p>{content}</p>
         )
       ) : type === "image" ? (
-        <img
-          src={content}
-          alt={`Draggable Image ${id}`}
-          style={{ width: "100px", height: "100px" }}
-        />
+        <>
+          <img
+            src={content}
+            alt={`Draggable Image ${id}`}
+            style={{ width: `${size.width}px`, height: `${size.height}px` }}
+          />
+          <div
+            className="resize-handle"
+            onMouseDown={handleResizeMouseDown}
+            style={{
+              position: "absolute",
+              bottom: 0,
+              right: 0,
+              width: "10px",
+              height: "10px",
+              backgroundColor: "blue",
+              cursor: "nwse-resize",
+            }}
+          />
+        </>
       ) : type === "video" ? (
-        <video
-          src={content}
-          controls
-          style={{ width: "150px", height: "100px" }}
-        />
+        <>
+          <video
+            src={content}
+            controls
+            style={{ width: `${size.width}px`, height: `${size.height}px` }}
+          />
+          <div
+            className="resize-handle"
+            onMouseDown={handleResizeMouseDown}
+            style={{
+              position: "absolute",
+              bottom: 0,
+              right: 0,
+              width: "10px",
+              height: "10px",
+              backgroundColor: "blue",
+              cursor: "nwse-resize",
+            }}
+          />
+        </>
       ) : null}
     </div>
   );
