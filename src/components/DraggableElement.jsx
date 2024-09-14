@@ -10,6 +10,7 @@ const DraggableElement = ({
   isSelected,
   onSelect,
   onTextChange,
+  onDelete, // Receive the onDelete prop
 }) => {
   const { setNodeRef, transform } = useDraggable({ id });
   const [isEditing, setIsEditing] = useState(false);
@@ -152,6 +153,9 @@ const DraggableElement = ({
           />
         </>
       ) : null}
+      
+      {/* Delete button */}
+      
     </div>
   );
 };

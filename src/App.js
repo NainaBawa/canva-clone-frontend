@@ -6,6 +6,7 @@ import DraggableElement from "./components/DraggableElement";
 import RotationControls from "./components/RotationControls";
 import DragControl from "./components/DragControls";
 import "./App.css";
+import DeleteControl from './components/DeleteControl';
 
 const App = () => {
   const [elements, setElements] = useState([]);
@@ -69,6 +70,11 @@ const App = () => {
     );
   };
 
+  // Delete element handler
+  const handleDelete = (id) => {
+    setElements((prevElements) => prevElements.filter((el) => el.id !== id));
+  };
+
   return (
     <DndContext onDragEnd={handleDragEnd}>
       <div className="App">
@@ -84,7 +90,7 @@ const App = () => {
                 content={el.content}
                 isSelected={selectedElementId === el.id}
                 onSelect={() => setSelectedElementId(el.id)}
-                onTextChange={(newText) => handleTextChange(el.id, newText)}
+                onTextChange={(newText) => handleTextChange(el.id, newText)}// Pass delete handler
               />
               <RotationControls
                 id={el.id}
@@ -92,6 +98,8 @@ const App = () => {
                 position={el.style}
               />
               <DragControl id={el.id} position={el.style} />
+              <DeleteControl onDelete={() => handleDelete(el.id)}position={el.style}/>
+
             </div>
           ))}
         </Canvas>

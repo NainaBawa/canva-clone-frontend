@@ -9,7 +9,7 @@ const DragControl = ({ id, position }) => {
   const controlStyle = {
     position: "absolute",
     top: position.top - 40,
-    left: position.left + 60,
+    left: position.left + 40,
     zIndex: 100, // Ensure it's on top
     cursor: "pointer",
   };

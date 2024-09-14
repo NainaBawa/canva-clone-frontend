@@ -14,7 +14,7 @@ const RotationControls = ({ id, updateRotation, position }) => {
   const controlStyle = {
     position: "absolute",
     top: position.top - 40,
-    left: position.left + 20,
+    left: position.left,
     zIndex: 100, // Ensure it's on top
     cursor: "pointer",
   };
