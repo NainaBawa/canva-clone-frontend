@@ -6,7 +6,7 @@ const DraggableElement = ({
   type,
   style,
   rotation,
-  content,  // Now content can be either text or image URL
+  content,
   isSelected,
   onSelect,
   onTextChange,
@@ -72,13 +72,19 @@ const DraggableElement = ({
         ) : (
           <p>{content}</p>
         )
-      ) : (
+      ) : type === "image" ? (
         <img
-          src={content}  // Display the uploaded image
+          src={content}
           alt={`Draggable Image ${id}`}
           style={{ width: "100px", height: "100px" }}
         />
-      )}
+      ) : type === "video" ? (
+        <video
+          src={content}
+          controls
+          style={{ width: "150px", height: "100px" }}
+        />
+      ) : null}
     </div>
   );
 };

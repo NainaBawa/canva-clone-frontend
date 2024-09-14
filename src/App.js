@@ -22,7 +22,7 @@ const App = () => {
         left: Math.random() * 300,
       },
       rotation: 0,
-      content: type === "text" ? "Editable text" : content, // Use content for images
+      content: type === "text" ? "Editable text" : content, // Content for images or videos
     };
     setElements([...elements, newElement]);
   };
@@ -101,4 +101,3 @@ const App = () => {
 };
 
 export default App;
-
