@@ -1,55 +1,85 @@
-import { useDraggable } from '@dnd-kit/core';
-import ControlPanel from './ControlPanel';
-import './DraggableElement.css'; // Add CSS file for hover and positioning
+import React, { useState, useEffect, useRef } from "react";
+import { useDraggable } from "@dnd-kit/core";
 
-const DraggableElement = ({ element, onRotate, onBringForward, onSendBackward }) => {
-  const { attributes, listeners, setNodeRef, transform } = useDraggable({
-    id: element.id,
-  });
+const DraggableElement = ({
+  id,
+  type,
+  style,
+  rotation,
+  content,
+  isSelected,
+  onSelect,
+  onTextChange,
+}) => {
+  const { setNodeRef, transform } = useDraggable({ id });
+  const [isEditing, setIsEditing] = useState(false);
+  const inputRef = useRef(null);
+  console.log(isSelected);
 
-  const style = {
-    transform: transform
-      ? `translate3d(${transform.x}px, ${transform.y}px, 0) rotate(${element.rotate}deg)`
-      : `rotate(${element.rotate}deg)`,
-    position: 'absolute',
-    top: element.top,
-    left: element.left,
-    zIndex: element.zIndex,
+  const draggableStyle = {
+    ...style,
+    transform: `translate3d(${transform?.x || 0}px, ${
+      transform?.y || 0
+    }px, 0) rotate(${rotation}deg)`,
   };
 
-  const handleRotateClick = () => {
-    onRotate((prevElements) =>
-      prevElements.map((el) =>
-        el.id === element.id ? { ...el, rotate: el.rotate + 45 } : el
-      )
-    );
+  const handleClick = () => {
+    onSelect();
+    setIsEditing(true);
   };
 
-  const handleBringForwardClick = () => {
-    onBringForward(element.id);
+  const handleBlur = () => {
+    setIsEditing(false);
   };
 
-  const handleSendBackwardClick = () => {
-    onSendBackward(element.id);
+  const handleChange = (e) => {
+    onTextChange(e.target.value);
   };
+
+  useEffect(() => {
+    if (isEditing && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [isEditing]);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (inputRef.current && !inputRef.current.contains(e.target)) {
+        handleBlur();
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   return (
-    <div className="draggable-element" ref={setNodeRef} style={style}>
-      <div {...listeners} {...attributes}>
-        {element.type === 'image' && (
-          <img src="https://via.placeholder.com/150" alt="placeholder" />
-        )}
-        {element.type === 'video' && (
-          <video src="path/to/video.mp4" controls width="150"></video>
-        )}
-        {element.type === 'text' && <div>Sample Text</div>}
-      </div>
-      {/* Control panel stays outside the draggable div */}
-      <ControlPanel
-        onRotate={handleRotateClick}
-        onBringForward={handleBringForwardClick}
-        onSendBackward={handleSendBackwardClick}
-      />
+    <div ref={setNodeRef} style={draggableStyle} onClick={handleClick}>
+      {type === "text" ? (
+        isEditing ? (
+          <input
+            ref={inputRef}
+            type="text"
+            value={content}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            style={{
+              width: "100%",
+              height: "100%",
+              border: "none",
+              outline: "none",
+            }}
+          />
+        ) : (
+          <p>{content}</p>
+        )
+      ) : (
+        <img
+          src="https://via.placeholder.com/100"
+          alt={`Draggable Image ${id}`}
+          style={{ width: "100px", height: "100px" }}
+        />
+      )}
     </div>
   );
 };

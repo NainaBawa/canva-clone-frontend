@@ -1,19 +1,11 @@
-import React from 'react';
-import { FaSync, FaArrowUp, FaArrowDown } from 'react-icons/fa'; // Icons from FontAwesome
-import './ControlPanel.css';
+import React from "react";
+import "./ControlPanel.css";
 
-const ControlPanel = ({ onRotate, onBringForward, onSendBackward }) => {
+const ControlPanel = ({ addElement }) => {
   return (
     <div className="control-panel">
-      <button onClick={onRotate} title="Rotate">
-        <FaSync />
-      </button>
-      <button onClick={onBringForward} title="Bring Forward">
-        <FaArrowUp />
-      </button>
-      <button onClick={onSendBackward} title="Send Backward">
-        <FaArrowDown />
-      </button>
+      <button onClick={() => addElement("text")}>Add Text</button>
+      <button onClick={() => addElement("image")}>Add Image</button>
     </div>
   );
 };

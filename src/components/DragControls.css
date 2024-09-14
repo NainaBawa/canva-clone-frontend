@@ -1,0 +1,36 @@
+.drag-controls {
+ display: block; /* Required for opacity transition to work */
+ opacity: 0;
+ visibility: hidden;
+ position: absolute;
+ z-index: 100; /* Ensure it's on top of other elements */
+ pointer-events: auto; /* Ensure it's clickable */
+ transition: opacity 0.6s ease, visibility 0.5s ease; /* Smooth transition for visibility */
+}
+
+.drag-handle {
+ cursor: pointer;
+ background-color: #f1f1f1;
+ border-radius: 50%;
+ width: 30px;
+ height: 30px;
+ display: flex;
+ justify-content: center;
+ align-items: center;
+}
+
+.drag-handle:hover {
+ background-color: #e1e1e1;
+}
+
+.drag-icon {
+ font-size: 20px;
+ color: #333;
+}
+
+.elementsWrapper:hover .drag-controls,
+.drag-controls:hover {
+ /* display: block; */
+ opacity: 1;
+ visibility: visible;
+}
