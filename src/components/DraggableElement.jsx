@@ -7,8 +7,6 @@ const DraggableElement = ({
   style,
   rotation,
   content,
-  isSelected,
-  onSelect,
   onTextChange,
   onDelete, // Receive the onDelete prop
 }) => {
@@ -27,7 +25,7 @@ const DraggableElement = ({
   };
 
   const handleClick = () => {
-    onSelect();
+    // onSelect();
     if (type === "text") {
       setIsEditing(true);
     }
