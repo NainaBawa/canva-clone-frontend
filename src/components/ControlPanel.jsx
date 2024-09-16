@@ -1,7 +1,8 @@
+// ControlPanel.js
 import React, { useRef } from "react";
 import "./ControlPanel.css";
 
-const ControlPanel = ({ addElement, setCurrentProjectId }) => {
+const ControlPanel = ({ addElement, setCurrentProjectId, saveProject }) => {
   const imageInputRef = useRef(null);
   const videoInputRef = useRef(null);
 
@@ -36,6 +37,7 @@ const ControlPanel = ({ addElement, setCurrentProjectId }) => {
         onChange={(e) => handleMediaUpload(e, "video")}
       />
       <button onClick={() => setCurrentProjectId(null)}>Back to Projects</button>
+      <button onClick={saveProject}>Save Project</button> {/* Save Project Button */}
     </div>
   );
 };

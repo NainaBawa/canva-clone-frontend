@@ -8,14 +8,15 @@ const DraggableElement = ({
   rotation,
   content,
   onTextChange,
-  //onDelete, // Receive the onDelete prop
+  updateSize, // <-- Add updateSize prop to save the size
+  // onDelete, // Uncomment if using
 }) => {
   const { setNodeRef, transform } = useDraggable({ id });
   const [isEditing, setIsEditing] = useState(false);
-  const [size, setSize] = useState({ width: 100, height: 100 }); // Add size state
-  const [isResizing, setIsResizing] = useState(false); // For resizing
+  const [size, setSize] = useState({ width: style.width || 100, height: style.height || 100 }); // Initialize from style
+  const [isResizing, setIsResizing] = useState(false);
   const inputRef = useRef(null);
-  const draggableRef = useRef(null); // Ref for the draggable element
+  const draggableRef = useRef(null);
 
   const draggableStyle = {
     ...style,
@@ -25,7 +26,6 @@ const DraggableElement = ({
   };
 
   const handleClick = () => {
-    // onSelect();
     if (type === "text") {
       setIsEditing(true);
     }
@@ -50,6 +50,7 @@ const DraggableElement = ({
     const newWidth = Math.max(50, e.clientX - draggableRef.current.getBoundingClientRect().left);
     const newHeight = Math.max(50, e.clientY - draggableRef.current.getBoundingClientRect().top);
     setSize({ width: newWidth, height: newHeight });
+    updateSize(id, { width: newWidth, height: newHeight }); // <-- Save size globally
   };
 
   const handleResizeMouseUp = () => {
@@ -151,9 +152,6 @@ const DraggableElement = ({
           />
         </>
       ) : null}
-      
-      {/* Delete button */}
-      
     </div>
   );
 };

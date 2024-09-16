@@ -19,11 +19,12 @@ const App = () => {
     addElement,
     updateElement,
     deleteElement,
+    saveProject,
   } = useProjects();
 
   const canvasRef = React.useRef(null);
 
-  console.log(currentProject.elements);
+  //console.log(currentProject.elements);
   
   const handleDragEnd = (event) => {
     const { active, delta } = event;
@@ -52,7 +53,7 @@ const App = () => {
         <DndContext onDragEnd={handleDragEnd}>
           <div>
             {/* <button onClick={() => selectProject(null)}>Back to Projects</button> */}
-            <ControlPanel addElement={addElement} setCurrentProjectId={selectProject}/>
+            <ControlPanel addElement={addElement} setCurrentProjectId={selectProject} saveProject={saveProject}/>
             <Canvas ref={canvasRef}>
               {Object.values(currentProject?.elements || {}).map((el) => (
                 <div className="elementsWrapper" key={el.id}>
@@ -63,8 +64,11 @@ const App = () => {
                     rotation={el.rotation}
                     content={el.content}
                     onTextChange={(newText) => updateElement(el.id, { content: newText })}
-                    //onDelete={() => deleteElement(el.id)}
+                    updateSize={(id, newSize) =>
+                      updateElement(el.id, { style: { ...el.style, ...newSize } })
+                    } // <-- Pass updateSize
                   />
+                  
                   <RotationControls id={el.id} updateRotation={(id, newRotation) => {updateElement(el.id, { rotation: newRotation });
                 console.log(newRotation, "Hii");}} position={el.style} />
                   <DragControl id={el.id} position={el.style} />

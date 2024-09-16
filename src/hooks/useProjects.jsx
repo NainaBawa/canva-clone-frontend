@@ -1,8 +1,24 @@
-import { useState } from "react";
+// useProjects.js
+import { useState, useEffect } from "react";
+import { db } from "../firebase/firebase"; // Import Firestore database
+import { collection, doc, setDoc, getDocs } from "firebase/firestore"; 
 
 const useProjects = () => {
   const [projects, setProjects] = useState({});
   const [currentProjectId, setCurrentProjectId] = useState(null);
+
+  // Fetch projects from Firestore on load
+  useEffect(() => {
+    const fetchProjects = async () => {
+      const querySnapshot = await getDocs(collection(db, "projects"));
+      const projectsData = {};
+      querySnapshot.forEach((doc) => {
+        projectsData[doc.id] = doc.data();
+      });
+      setProjects(projectsData);
+    };
+    fetchProjects();
+  }, []);
 
   // Add a new project
   const addProject = () => {
@@ -17,6 +33,16 @@ const useProjects = () => {
       [newId]: newProject,
     }));
     setCurrentProjectId(newId);
+  };
+
+  // Save current project to Firestore
+  const saveProject = async () => {
+    console.log(projects[currentProjectId]);
+    if (currentProjectId) {
+      await setDoc(doc(db, "projects", currentProjectId), projects[currentProjectId]);
+      console.log("Project saved!");
+    }
+    
   };
 
   // Select a project
@@ -93,6 +119,7 @@ const useProjects = () => {
     addElement,
     updateElement,
     deleteElement,
+    saveProject, // Expose saveProject method
   };
 };
 
