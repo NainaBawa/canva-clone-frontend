@@ -8,7 +8,7 @@ const RotationControls = ({ id, updateRotation, position }) => {
   const [isRotating, setIsRotating] = useState(false);
   const centerRef = useRef(null);
 
-  const { attributes, listeners, setNodeRef, transform } = useDraggable({ id });
+  //const { attributes, listeners, setNodeRef, transform } = useDraggable({ id });
 
   // Adjust control style to ensure it's on top and clickable
   const controlStyle = {

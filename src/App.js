@@ -23,6 +23,8 @@ const App = () => {
 
   const canvasRef = React.useRef(null);
 
+  console.log(currentProject.elements);
+  
   const handleDragEnd = (event) => {
     const { active, delta } = event;
     const { id } = active;
@@ -61,9 +63,10 @@ const App = () => {
                     rotation={el.rotation}
                     content={el.content}
                     onTextChange={(newText) => updateElement(el.id, { content: newText })}
-                    onDelete={() => deleteElement(el.id)}
+                    //onDelete={() => deleteElement(el.id)}
                   />
-                  <RotationControls id={el.id} updateRotation={(newRotation) => updateElement(el.id, { rotation: newRotation })} position={el.style} />
+                  <RotationControls id={el.id} updateRotation={(id, newRotation) => {updateElement(el.id, { rotation: newRotation });
+                console.log(newRotation, "Hii");}} position={el.style} />
                   <DragControl id={el.id} position={el.style} />
                   <DeleteControl onDelete={() => deleteElement(el.id)} position={el.style} />
                 </div>

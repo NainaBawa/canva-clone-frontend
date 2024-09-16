@@ -8,7 +8,7 @@ const DraggableElement = ({
   rotation,
   content,
   onTextChange,
-  onDelete, // Receive the onDelete prop
+  //onDelete, // Receive the onDelete prop
 }) => {
   const { setNodeRef, transform } = useDraggable({ id });
   const [isEditing, setIsEditing] = useState(false);
