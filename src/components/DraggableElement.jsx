@@ -135,6 +135,8 @@ const DraggableElement = ({
           <video
             src={content}
             controls
+            autoPlay
+            loop
             style={{ width: `${size.width}px`, height: `${size.height}px` }}
           />
           <div

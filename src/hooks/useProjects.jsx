@@ -5,8 +5,8 @@ import { collection, doc, setDoc, getDocs } from "firebase/firestore";
 const useProjects = () => {
   const [projects, setProjects] = useState({});
   const [currentProjectId, setCurrentProjectId] = useState(null);
+  const [isSaving, setIsSaving] = useState(false); // Track saving state
 
-  // Fetch projects from Firestore on load
   useEffect(() => {
     const fetchProjects = async () => {
       const querySnapshot = await getDocs(collection(db, "projects"));
@@ -19,7 +19,6 @@ const useProjects = () => {
     fetchProjects();
   }, []);
 
-  // Add a new project
   const addProject = () => {
     const newId = `project-${Object.keys(projects).length}`;
     const newProject = {
@@ -37,15 +36,15 @@ const useProjects = () => {
   // Save current project to Firestore
   const saveProject = async () => {
     if (currentProjectId) {
+      setIsSaving(true); // Start saving
       await setDoc(doc(db, "projects", currentProjectId), projects[currentProjectId]);
       console.log("Project saved!");
+      setIsSaving(false); // End saving
     }
   };
 
-  // Select a project
   const selectProject = (projectId) => setCurrentProjectId(projectId);
 
-  // Add element to the current project
   const addElement = (type, content = "") => {
     const project = projects[currentProjectId];
     const newElementId = `element-${Object.keys(project.elements).length}`;
@@ -58,7 +57,7 @@ const useProjects = () => {
         left: Math.random() * 300,
       },
       rotation: 0,
-      content: type === "text" ? "Editable text" : content, // Save the URL here
+      content: type === "text" ? "Editable text" : content,
     };
 
     setProjects((prevProjects) => ({
@@ -73,7 +72,6 @@ const useProjects = () => {
     }));
   };
 
-  // Update element within the current project
   const updateElement = (elementId, newProperties) => {
     const project = projects[currentProjectId];
 
@@ -92,7 +90,6 @@ const useProjects = () => {
     }));
   };
 
-  // Delete an element
   const deleteElement = (elementId) => {
     const { [elementId]: _, ...restElements } = projects[currentProjectId].elements;
 
@@ -116,7 +113,8 @@ const useProjects = () => {
     addElement,
     updateElement,
     deleteElement,
-    saveProject, // Expose saveProject method
+    saveProject,
+    isSaving, // Expose isSaving state
   };
 };
 

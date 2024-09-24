@@ -20,6 +20,7 @@ const App = () => {
     updateElement,
     deleteElement,
     saveProject,
+    isSaving,
   } = useProjects();
 
   const canvasRef = React.useRef(null);
@@ -53,7 +54,7 @@ const App = () => {
         <DndContext onDragEnd={handleDragEnd}>
           <div>
             {/* <button onClick={() => selectProject(null)}>Back to Projects</button> */}
-            <ControlPanel addElement={addElement} setCurrentProjectId={selectProject} saveProject={saveProject}/>
+            <ControlPanel addElement={addElement} setCurrentProjectId={selectProject} saveProject={saveProject} isSaving={isSaving} canvasRef={canvasRef}/>
             <Canvas ref={canvasRef}>
               {Object.values(currentProject?.elements || {}).map((el) => (
                 <div className="elementsWrapper" key={el.id}>

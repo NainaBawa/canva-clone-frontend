@@ -1,9 +1,10 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import { storage } from "../firebase/firebase"; // Import storage
+import { storage } from "../firebase/firebase";
 import "./ControlPanel.css";
 
-const ControlPanel = ({ addElement, setCurrentProjectId, saveProject }) => {
+const ControlPanel = ({ addElement, setCurrentProjectId, saveProject, isSaving }) => {
+  const [loading, setLoading] = useState(false); // Loading state for file uploads
   const imageInputRef = useRef(null);
   const videoInputRef = useRef(null);
 
@@ -11,21 +12,23 @@ const ControlPanel = ({ addElement, setCurrentProjectId, saveProject }) => {
   const handleMediaUpload = async (e, type) => {
     const file = e.target.files[0];
     if (file) {
-      const storageRef = ref(storage, `media/${file.name}`); // Reference in Firebase Storage
+      setLoading(true); // Show loading spinner
+      const storageRef = ref(storage, `media/${file.name}`);
       const uploadTask = uploadBytesResumable(storageRef, file);
 
       uploadTask.on(
         "state_changed",
         (snapshot) => {
-          // Optional: handle progress if needed
+          // Optional: Handle upload progress
         },
         (error) => {
           console.error("Upload failed:", error);
+          setLoading(false); // Hide loading spinner on error
         },
         async () => {
-          // Once the upload is complete, get the download URL
           const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-          addElement(type, downloadURL); // Save the URL instead of Base64
+          addElement(type, downloadURL); // Save the URL in the project
+          setLoading(false); // Hide loading spinner after upload
         }
       );
     }
@@ -33,6 +36,12 @@ const ControlPanel = ({ addElement, setCurrentProjectId, saveProject }) => {
 
   return (
     <div className="control-panel">
+      {(loading || isSaving) && (
+        <div className="loading-overlay">
+          {loading && <p>Uploading...</p>}
+          {isSaving && <p>Saving Project...</p>}
+        </div>
+      )}
       <button onClick={() => addElement("text")}>Add Text</button>
       <button onClick={() => imageInputRef.current.click()}>Add Image</button>
       <input
