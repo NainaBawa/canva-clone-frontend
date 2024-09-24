@@ -1,7 +1,6 @@
-// useProjects.js
 import { useState, useEffect } from "react";
-import { db } from "../firebase/firebase"; // Import Firestore database
-import { collection, doc, setDoc, getDocs } from "firebase/firestore"; 
+import { db } from "../firebase/firebase";
+import { collection, doc, setDoc, getDocs } from "firebase/firestore";
 
 const useProjects = () => {
   const [projects, setProjects] = useState({});
@@ -37,12 +36,10 @@ const useProjects = () => {
 
   // Save current project to Firestore
   const saveProject = async () => {
-    console.log(projects[currentProjectId]);
     if (currentProjectId) {
       await setDoc(doc(db, "projects", currentProjectId), projects[currentProjectId]);
       console.log("Project saved!");
     }
-    
   };
 
   // Select a project
@@ -61,7 +58,7 @@ const useProjects = () => {
         left: Math.random() * 300,
       },
       rotation: 0,
-      content: type === "text" ? "Editable text" : content,
+      content: type === "text" ? "Editable text" : content, // Save the URL here
     };
 
     setProjects((prevProjects) => ({
